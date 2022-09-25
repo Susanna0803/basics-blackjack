@@ -3,17 +3,23 @@
 //step 3. ability for the dealer to hit or stand
 //step 4. variable value of Ace - can be '1' or '11'
 
-//PESUDOCODING for step 1:
+//PSEUDOCODING for ver 1:
 //1. define player and ReadableStreamDefaultReader
 //2. create and shuffle a game deck
 //3. draw 2 cards for player and dealer respectively
 //4. win conditions: blackjack/ higher hand value
 //5. display hands of both player and dealer and declare winner
 
+//PSEUDOCODING for ver 2:
+//1.game mode "hit or stand"
+//2.functionality for user to input hit or stand.
+
+// GLOBAL VARIABLES
 // Declare game modes
 var GAME_START = "game start";
 var GAME_CARDS_DRAWN = "cards drawn";
 var GAME_RESULTS_SHOWN = "results shown";
+var GAME_HIT_OR_STAND = "hot or stand";
 var currentGameMode = GAME_START;
 
 // Declare variables to store player and dealer hands
@@ -273,10 +279,65 @@ var main = function (input) {
       }
 
       //change game mode
-      currentGameMode = GAME_RESULTS_SHOWN;
+      currentGameMode = GAME_HIT_OR_STAND;
 
       //output message
       return outputMessage;
     }
+  }
+
+  //HIT OR STAND
+  if (currentGameMode == GAME_HIT_OR_STAND) {
+    //player HIT
+    if (input == "hit") {
+      playerHand.push(gameDeck.pop());
+      outputMessage =
+        displayPlayerAndDealerHands(playerHand, dealerHand) +
+        '<br> You drew another card. <br><br>Please input "hit" or "stand" to continue the game.';
+    }
+
+    //player STAND
+    else if (input == "stand") {
+      //calculate the total hand value of player and dealer
+      var playerHandTotalValue = calculateTotalHandValue(playerHand);
+      var dealerHandTotalValue = calculateTotalHandValue(dealerHand);
+
+      console.log("PLayer Total Hand Value --> ", playerHandTotalValue);
+      console.log("Dealer Total Hand Value --> ", dealerHandTotalValue);
+
+      //compare total hand value
+      //same value -> tie
+      if (playerHandTotalValue == dealerHandTotalValue) {
+        outputMessage =
+          displayPlayerAndDealerHands(playerHand, dealerHand) +
+          "<br><br>IT IS A TIE!" +
+          displayHandTotalValues(playerHandTotalValue, dealerHandTotalValue);
+      }
+
+      //player higher value -> player wins
+      else if (playerHandTotalValue > dealerHandTotalValue) {
+        outputMessage =
+          displayPlayerAndDealerHands(playerHand, dealerHand) +
+          "<br><br>YOU WIN! WOOHOOOO!" +
+          displayHandTotalValues(playerHandTotalValue, dealerHandTotalValue);
+      }
+
+      //dealer higher value -> dealer wins
+      else {
+        outputMessage =
+          displayPlayerAndDealerHands(playerHand, dealerHand) +
+          "<br><br>DEALER WINS!" +
+          displayHandTotalValues(playerHandTotalValue, dealerHandTotalValue);
+      }
+    }
+
+    //input validation
+    else {
+      outputMessage =
+        'Wrong input... only "hit" or"stand" are valid. <br><br>' +
+        displayPlayerAndDealerHands(playerHand, dealerHand);
+    }
+
+    return outputMessage;
   }
 };
