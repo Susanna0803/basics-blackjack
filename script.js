@@ -221,21 +221,21 @@ var infoWinningOrLoosing = function (
   if (playerHandTotalValue == dealerHandTotalValue) {
     outputMessage =
       displayPlayerAndDealerHands(playerHand, dealerHand) +
-      "<br><br>IT IS A TIE!";
+      "<br><br>IT IS A TIE 🫥🫥";
   }
 
   //player higher value -> player wins
   else if (playerHandTotalValue > dealerHandTotalValue) {
     outputMessage =
       displayPlayerAndDealerHands(playerHand, dealerHand) +
-      "<br><br>YOU WIN! WOOHOOOO!";
+      "<br><br>YOU WIN 🍀! WOOHOOOO 🫡";
   }
 
   //dealer higher value -> dealer wins
   else {
     outputMessage =
       displayPlayerAndDealerHands(playerHand, dealerHand) +
-      "<br><br>DEALER WINS!";
+      "<br><br>DEALER WINS 🫣🫣";
   }
 
   return outputMessage;
@@ -285,7 +285,7 @@ var main = function (input) {
       if (playerHasBlackjack == true && dealerHasBlackjack == true) {
         outputMessage =
           displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "<br><br>BLACKJACK TIE!";
+          "<br><br>BLACKJACK TIE 🫥🫥 <br><br>Game end... click 'DRAW🃏' button to play a new game 🤝 ";
         currentGameMode = GAME_START;
         resetEverything();
       }
@@ -293,7 +293,7 @@ var main = function (input) {
       else if (playerHasBlackjack == true && dealerHasBlackjack == false) {
         outputMessage =
           displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "<br><br>PLAYER WINS!<br><br> Player has BLACKJACK";
+          "<br><br>YOU WIN 🫡!<br><br> You has BLACKJACK 🍀🍀 <br><br>Game end... click 'DRAW🃏' button to play a new game 🤝";
         currentGameMode = GAME_START;
         resetEverything();
       }
@@ -302,7 +302,7 @@ var main = function (input) {
       else {
         outputMessage =
           displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "<br><br>DEALER WINS!<br><br> Dealer has BLACKJACK";
+          "<br><br>DEALER WINS 🫣<br><br> Dealer has BLACKJACK <br><br>Game end... click 'DRAW🃏' button to play a new game 🤝";
       }
       console.log(outputMessage);
       currentGameMode = GAME_START;
@@ -338,7 +338,7 @@ var main = function (input) {
   if (currentGameMode == GAME_HIT_OR_STAND) {
     if (input != "hit" && input != "stand") {
       return (
-        'Wrong button... click only "hit" or "stand" to continue with the game. <br><br>' +
+        '❌ Wrong button ❌... click only "hit" or "stand" to continue with the game. <br><br>' +
         displayPlayerAndDealerHands(playerHand, dealerHand)
       );
     }
@@ -352,12 +352,12 @@ var main = function (input) {
       if (playerHandTotalValue > 21) {
         currentGameMode = GAME_START;
         resetEverything();
-        return "BUST! Your card value is more than 21. You LOST!";
+        return "BUST! Your card value is more than 21. You LOST 🫣 <br><br>Game end... click 'DRAW🃏' button to play a new game 🤝";
       }
       if (playerHandTotalValue == 21) {
         currentGameMode = GAME_START;
         resetEverything();
-        return "BLACKJACK! You WIN!";
+        return "BLACKJACK 🍀🍀! You WIN 🫡!<br><br>Game end... click 'DRAW🃏' button to play a new game 🤝";
       }
 
       // else, continue game
@@ -380,30 +380,36 @@ var main = function (input) {
       if (dealerHandTotalValue > 21) {
         currentGameMode = GAME_START;
         resetEverything();
-        return "Dealer BUST! You WIN!";
+        return "Dealer BUST! You WIN 🫡 <br><br>Game end... click 'DRAW🃏' button to play a new game 🤝";
       }
 
       if (dealerHandTotalValue == 21) {
         currentGameMode = GAME_START;
         resetEverything();
-        return "Dealer BLACKJACK! DEALER WINS!";
+        return "Dealer BLACKJACK! DEALER WINS 🫣<br><br>Game end... click 'DRAW🃏' button to play a new game 🤝";
       }
 
       var result = displayPlayerAndDealerHands(playerHand, dealerHand);
       //compare total hand value
       //same value -> tie
       if (playerHandTotalValue == dealerHandTotalValue) {
-        outputMessage = result + "<br><br>IT IS A TIE!";
+        outputMessage =
+          result +
+          "<br><br>IT IS A TIE 🫥🫥 <br><br>Game end... click 'DRAW🃏' button to play a new game 🤝";
       }
 
       //player higher value -> player wins
       else if (playerHandTotalValue > dealerHandTotalValue) {
-        outputMessage = result + "<br><br>YOU WIN! WOOHOOOO!";
+        outputMessage =
+          result +
+          "<br><br>YOU WIN 🍀🍀! WOOHOOOO 🫡 <br><br>Game end... click 'DRAW🃏' button to play a new game 🤝";
       }
 
       //dealer higher value -> dealer wins
       else {
-        outputMessage = result + "<br><br>DEALER WINS!";
+        outputMessage =
+          result +
+          "<br><br>DEALER WINS 🫣<br><br>Game end... click 'DRAW🃏' button to play a new game 🤝";
       }
       currentGameMode = GAME_START;
       resetEverything();
