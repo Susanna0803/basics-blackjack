@@ -28,7 +28,8 @@
 var GAME_START = "game start";
 var GAME_CARDS_DRAWN = "cards drawn";
 var GAME_RESULTS_SHOWN = "results shown";
-var GAME_HIT_OR_STAND = "hot or stand";
+var GAME_HIT_OR_STAND = "hit or stand";
+var GAME_END = "game end";
 var currentGameMode = GAME_START;
 
 // Declare variables to store player and dealer hands
@@ -37,12 +38,13 @@ var playerHand = [];
 var dealerHand = [];
 
 //Declare variable to hold deck of cards
-var gameDeck = "empty at the start";
+var gameDeck = [];
 
 //Function to make deck
 var makeDeck = function () {
   var cardDeck = [];
-  var suits = ["hearts", "diamonds", "clubs", "spades"];
+  var suits = ["hearts ♡", "diamonds ♢", "clubs ♧", "spades ♤"];
+  var imageSuits = ["H", "D", "C", "S"];
   var suitIndex = 0;
   while (suitIndex < suits.length) {
     var currentSuit = suits[suitIndex];
@@ -50,15 +52,20 @@ var makeDeck = function () {
     var rankCounter = 1;
     while (rankCounter <= 13) {
       var cardName = rankCounter;
+      var imageName = rankCounter + "-" + imageSuits[suitIndex] + ".png";
 
       if (cardName == 1) {
         cardName = "ace";
+        imageName = "A-" + imageSuits[suitIndex] + ".png";
       } else if (cardName == 11) {
         cardName = "jack";
+        imageName = "J-" + imageSuits[suitIndex] + ".png";
       } else if (cardName == 12) {
         cardName = "queen";
+        imageName = "Q-" + imageSuits[suitIndex] + ".png";
       } else if (cardName == 13) {
         cardName = "king";
+        imageName = "K-" + imageSuits[suitIndex] + ".png";
       }
 
       // Create a new card with the current name, suit, and rank
@@ -66,6 +73,7 @@ var makeDeck = function () {
         name: cardName,
         suit: currentSuit,
         rank: rankCounter,
+        imageName: imageName,
       };
 
       // Add the new card to the deck
@@ -166,30 +174,26 @@ var calculateTotalHandValue = function (handArray) {
 //function that displays the player and dealer hands in message
 var displayPlayerAndDealerHands = function (playerHandArray, dealerHandArray) {
   //player hand
-  var playerMessage = "Player Hand:<br>";
+  var playerMessage = "🤟 Player Hand:<br>";
   var index = 0;
   while (index < playerHandArray.length) {
     playerMessage =
       playerMessage +
-      "- " +
-      playerHandArray[index].name +
-      " of " +
-      playerHandArray[index].suit +
-      "<br>";
+      "<img style='display:inline' width='91' height='140' src='images/" +
+      playerHandArray[index].imageName +
+      "' />";
     index = index + 1;
   }
 
   //Dealer hand
   index = 0;
-  var dealerMessage = "Dealer Hand:<br>";
+  var dealerMessage = "👀 Dealer Hand:<br>";
   while (index < dealerHandArray.length) {
     dealerMessage =
       dealerMessage +
-      "- " +
-      dealerHandArray[index].name +
-      " of " +
-      dealerHandArray[index].suit +
-      "<br>";
+      "<img style='display:inline' width='91' height='140' src='images/" +
+      dealerHandArray[index].imageName +
+      "' />";
     index = index + 1;
   }
 
@@ -199,11 +203,48 @@ var displayPlayerAndDealerHands = function (playerHandArray, dealerHandArray) {
 //function that displays the total hand values in a message
 var displayHandTotalValues = function (playerHandValue, dealerHandValue) {
   var totalHandValueMessage =
-    "<br><br>Player total hand value: " +
+    "<br><br>Player 🧮: " +
     playerHandValue +
-    "<br>Dealer total hand value: " +
+    "<br>Dealer 🧮: " +
     dealerHandValue;
   return totalHandValueMessage;
+};
+
+//compare total hand value
+var infoWinningOrLoosing = function (
+  playerHand,
+  playerHandTotalValue,
+  dealerHand,
+  dealerHandTotalValue
+) {
+  //same value -> tie
+  if (playerHandTotalValue == dealerHandTotalValue) {
+    outputMessage =
+      displayPlayerAndDealerHands(playerHand, dealerHand) +
+      "<br><br>IT IS A TIE!";
+  }
+
+  //player higher value -> player wins
+  else if (playerHandTotalValue > dealerHandTotalValue) {
+    outputMessage =
+      displayPlayerAndDealerHands(playerHand, dealerHand) +
+      "<br><br>YOU WIN! WOOHOOOO!";
+  }
+
+  //dealer higher value -> dealer wins
+  else {
+    outputMessage =
+      displayPlayerAndDealerHands(playerHand, dealerHand) +
+      "<br><br>DEALER WINS!";
+  }
+
+  return outputMessage;
+};
+
+var resetEverything = function () {
+  playerHand = [];
+  dealerHand = [];
+  gameDeck = [];
 };
 
 // MAIN FUNCTION
@@ -229,7 +270,7 @@ var main = function (input) {
 
     //write and return the appropriate output message
     outputMessage =
-      "Everyone has been dealt a card.<br><br>Click the 'submit' button to evaluate cards!";
+      "Everyone has been dealt a card 💫.<br><br>Click the 'DRAW🃏' button one more time to evaluate cards 🔍!";
     return outputMessage;
   }
 
@@ -245,25 +286,30 @@ var main = function (input) {
         outputMessage =
           displayPlayerAndDealerHands(playerHand, dealerHand) +
           "<br><br>BLACKJACK TIE!";
+        currentGameMode = GAME_START;
+        resetEverything();
       }
       // only player has blackjack -> player wins
       else if (playerHasBlackjack == true && dealerHasBlackjack == false) {
         outputMessage =
           displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "PLAYER WINS!<br><br> Player has BLACKJACK";
+          "<br><br>PLAYER WINS!<br><br> Player has BLACKJACK";
+        currentGameMode = GAME_START;
+        resetEverything();
       }
 
       // only dealer has blackjack -> dealer wins
       else {
         outputMessage =
           displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "DEALER WINS!<br><br> Dealer has BLACKJACK";
+          "<br><br>DEALER WINS!<br><br> Dealer has BLACKJACK";
       }
       console.log(outputMessage);
+      currentGameMode = GAME_START;
+      resetEverything();
+      return outputMessage;
     } else {
-      outputMessage =
-        displayPlayerAndDealerHands(playerHand, dealerHand) +
-        "<br><br>NO BLACKJACK!";
+      outputMessage = displayPlayerAndDealerHands(playerHand, dealerHand);
       console.log(outputMessage);
 
       // no blackjack -> game continues
@@ -275,30 +321,10 @@ var main = function (input) {
       console.log("PLayer Total Hand Value --> ", playerHandTotalValue);
       console.log("Dealer Total Hand Value --> ", dealerHandTotalValue);
 
-      //compare total hand value
-      //same value -> tie
-      if (playerHandTotalValue == dealerHandTotalValue) {
-        outputMessage =
-          displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "<br><br>IT IS A TIE!" +
-          displayHandTotalValues(playerHandTotalValue, dealerHandTotalValue);
-      }
-
-      //player higher value -> player wins
-      else if (playerHandTotalValue > dealerHandTotalValue) {
-        outputMessage =
-          displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "<br><br>YOU WIN! WOOHOOOO!" +
-          displayHandTotalValues(playerHandTotalValue, dealerHandTotalValue);
-      }
-
-      //dealer higher value -> dealer wins
-      else {
-        outputMessage =
-          displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "<br><br>DEALER WINS!" +
-          displayHandTotalValues(playerHandTotalValue, dealerHandTotalValue);
-      }
+      outputMessage += displayHandTotalValues(
+        playerHandTotalValue,
+        dealerHandTotalValue
+      );
 
       //change game mode
       currentGameMode = GAME_HIT_OR_STAND;
@@ -310,12 +336,34 @@ var main = function (input) {
 
   //HIT OR STAND
   if (currentGameMode == GAME_HIT_OR_STAND) {
+    if (input != "hit" && input != "stand") {
+      return (
+        'Wrong button... click only "hit" or "stand" to continue with the game. <br><br>' +
+        displayPlayerAndDealerHands(playerHand, dealerHand)
+      );
+    }
+
     //player HIT
     if (input == "hit") {
       playerHand.push(gameDeck.pop());
+      var playerHandTotalValue = calculateTotalHandValue(playerHand);
+      var dealerHandTotalValue = calculateTotalHandValue(dealerHand);
+      // Calcute whether user bust or not, after the 'hit'. >21 = BUST
+      if (playerHandTotalValue > 21) {
+        currentGameMode = GAME_START;
+        resetEverything();
+        return "BUST! Your card value is more than 21. You LOST!";
+      }
+      if (playerHandTotalValue == 21) {
+        currentGameMode = GAME_START;
+        resetEverything();
+        return "BLACKJACK! You WIN!";
+      }
+
+      // else, continue game
       outputMessage =
         displayPlayerAndDealerHands(playerHand, dealerHand) +
-        '<br> You drew another card. <br><br>Please input "hit" or "stand" to continue the game.';
+        '<br> You drew another card. <br><br>Please click "hit" or "stand" to continue the game.';
     }
 
     //player STAND
@@ -329,38 +377,42 @@ var main = function (input) {
         dealerHandTotalValue = calculateTotalHandValue(dealerHand);
       }
 
+      if (dealerHandTotalValue > 21) {
+        currentGameMode = GAME_START;
+        resetEverything();
+        return "Dealer BUST! You WIN!";
+      }
+
+      if (dealerHandTotalValue == 21) {
+        currentGameMode = GAME_START;
+        resetEverything();
+        return "Dealer BLACKJACK! DEALER WINS!";
+      }
+
+      var result = displayPlayerAndDealerHands(playerHand, dealerHand);
       //compare total hand value
       //same value -> tie
       if (playerHandTotalValue == dealerHandTotalValue) {
-        outputMessage =
-          displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "<br><br>IT IS A TIE!" +
-          displayHandTotalValues(playerHandTotalValue, dealerHandTotalValue);
+        outputMessage = result + "<br><br>IT IS A TIE!";
       }
 
       //player higher value -> player wins
       else if (playerHandTotalValue > dealerHandTotalValue) {
-        outputMessage =
-          displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "<br><br>YOU WIN! WOOHOOOO!" +
-          displayHandTotalValues(playerHandTotalValue, dealerHandTotalValue);
+        outputMessage = result + "<br><br>YOU WIN! WOOHOOOO!";
       }
 
       //dealer higher value -> dealer wins
       else {
-        outputMessage =
-          displayPlayerAndDealerHands(playerHand, dealerHand) +
-          "<br><br>DEALER WINS!" +
-          displayHandTotalValues(playerHandTotalValue, dealerHandTotalValue);
+        outputMessage = result + "<br><br>DEALER WINS!";
       }
+      currentGameMode = GAME_START;
+      resetEverything();
     }
 
-    //input validation
-    else {
-      outputMessage =
-        'Wrong input... only "hit" or"stand" are valid. <br><br>' +
-        displayPlayerAndDealerHands(playerHand, dealerHand);
-    }
+    outputMessage += displayHandTotalValues(
+      playerHandTotalValue,
+      dealerHandTotalValue
+    );
 
     return outputMessage;
   }
